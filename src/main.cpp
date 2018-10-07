@@ -116,11 +116,11 @@ int main() {
           // std::cout << "v " << px << " nv " << npx << " t " << throttle_value <<std::endl;
 
           // shift car reference angle to 90 degrees
-          for (int i = 0; i < ptsx.size(); i++) {
+          for (size_t i = 0; i < ptsx.size(); i++) {
             double shift_x = ptsx[i] - px_new;
             double shift_y = ptsy[i] - py_new;
             waypoints_x[i] = (shift_x * cos(0-psi_new) - shift_y * sin(0-psi_new));
-            waypoints_y[i] = (shift_x * sin(0-psi_new + shift_y * cos(0-psi_new));
+            waypoints_y[i] = (shift_x * sin(0-psi_new) + shift_y * cos(0-psi_new));
           }
 
           auto coeffs = polyfit(waypoints_x, waypoints_y, 3) ;
@@ -128,7 +128,7 @@ int main() {
           double epsi = - atan(coeffs[1]);
 
           Eigen::VectorXd state(6);
-          state << 0, 0, 0, nv, cte, epsi;
+          state << 0, 0, 0, v_new, cte, epsi;
 
           auto vars = mpc.Solve(state, coeffs);
 
@@ -143,7 +143,7 @@ int main() {
           vector<double> mpc_x_vals;
           vector<double> mpc_y_vals;
 
-          for(int i = 2; i < vars.size(); i++){
+          for(size_t i = 2; i < vars.size(); i++){
             if(i%2==0){
               mpc_x_vals.push_back(vars[i]);
             }
