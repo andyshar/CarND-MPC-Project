@@ -47,6 +47,7 @@ The actuators are:
 * a - throttle
 
 For the update equations see the image.
+
 ![model](./img/mode_equation.png)
 
 #### 2. Student discusses the reasoning behind the chosen N (timestep length) and dt (elapsed duration between timesteps) values. Additionally the student details the previous values tried.
