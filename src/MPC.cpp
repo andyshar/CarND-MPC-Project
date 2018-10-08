@@ -134,9 +134,9 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
   double cte = state[4];
   double epsi = state[5];
 
-  size_t n_vars = N * 6 + (N - 1) * 2;
+  size_t n_vars = 6 * N + 2 * (N - 1);
   // TODO: Set the number of constraints
-  size_t n_constraints = N * 6;
+  size_t n_constraints = 6 * N;
 
   // Initial value of the independent variables.
   // SHOULD BE 0 besides initial state.
@@ -163,7 +163,9 @@ vector<double> MPC::Solve(Eigen::VectorXd state, Eigen::VectorXd coeffs) {
 
   for (size_t i = delta_start; i < a_start; i++)
   {
+    // - 25 * Pi / 180 
     vars_lowerbound[i] = -0.436332;
+    // 25 * Pi / 180 
     vars_upperbound[i] = 0.436332;
   }
 
