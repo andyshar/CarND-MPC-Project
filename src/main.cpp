@@ -109,18 +109,17 @@ int main() {
           // 100 ms delay
           double latency = 100.00 / 1000;
 
-          double v_new = v + throttle_value * latency;
-          double psi_new = psi - v_new / Lf * steer_value * latency;
-          double px_new = px + v_new * cos(psi_new) * latency;
-          double py_new = py + v_new * sin(psi_new) * latency;
-          // std::cout << "v " << px << " nv " << npx << " t " << throttle_value <<std::endl;
+          v = v + throttle_value * latency;
+          psi = psi - v / Lf * steer_value * latency;
+          px = px + v * cos(psi) * latency;
+          py = py + v * sin(psi) * latency;
 
           // shift car reference angle to 90 degrees
           for (size_t i = 0; i < ptsx.size(); i++) {
-            double shift_x = ptsx[i] - px_new;
-            double shift_y = ptsy[i] - py_new;
-            waypoints_x[i] = (shift_x * cos(0-psi_new) - shift_y * sin(0-psi_new));
-            waypoints_y[i] = (shift_x * sin(0-psi_new) + shift_y * cos(0-psi_new));
+            double shift_x = ptsx[i] - px;
+            double shift_y = ptsy[i] - py;
+            waypoints_x[i] = (shift_x * cos(0-psi) - shift_y * sin(0-psi));
+            waypoints_y[i] = (shift_x * sin(0-psi) + shift_y * cos(0-psi));
           }
 
           auto coeffs = polyfit(waypoints_x, waypoints_y, 3) ;
@@ -128,7 +127,7 @@ int main() {
           double epsi = - atan(coeffs[1]);
 
           Eigen::VectorXd state(6);
-          state << 0, 0, 0, v_new, cte, epsi;
+          state << 0, 0, 0, v, cte, epsi;
 
           auto vars = mpc.Solve(state, coeffs);
 
